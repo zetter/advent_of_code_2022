@@ -17,18 +17,18 @@ mapWithIndex f a = map f (zip [1..] a)
 move :: [String] -> [(Int, Int, Int)] -> [String]
 move state [] = state
 move state ((0,_,_):ms) = move state ms
-move state ((count,from,to):ms) = move (putOn to (takeOff from state)) ((count - 1, from, to):ms)
+move state ((count,from,to):ms) = move (putOn (takeOff state)) ((count - 1, from, to):ms)
   where 
-    takeOff from = mapWithIndex (\(i, cs) -> if i == from then tail cs else cs)
-    putOn to = mapWithIndex (\(i, cs) -> if i == to then toMove:cs else cs)
+    takeOff = mapWithIndex (\(i, cs) -> if i == from then tail cs else cs)
+    putOn = mapWithIndex (\(i, cs) -> if i == to then toMove:cs else cs)
     toMove = head (state !! (from - 1))
 
 move' :: [String] -> [(Int, Int, Int)] -> [String]
 move' state [] = state
-move' state ((count,from,to):ms) = move' (putOn to (takeOff from state)) ms
+move' state ((count,from,to):ms) = move' (putOn (takeOff state)) ms
   where 
-    takeOff from = mapWithIndex (\(i, cs) -> if i == from then drop count cs else cs)
-    putOn to = mapWithIndex (\(i, cs) -> if i == to then toMove ++ cs else cs)
+    takeOff = mapWithIndex (\(i, cs) -> if i == from then drop count cs else cs)
+    putOn = mapWithIndex (\(i, cs) -> if i == to then toMove ++ cs else cs)
     toMove = take count (state !! (from - 1))
 
 main :: IO ()
