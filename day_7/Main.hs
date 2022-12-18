@@ -29,3 +29,8 @@ main = do
   let (directories, files) = partition ((== 0) . snd) items
   let directorySizes = calculateSizes directories files
   print $ sum (map snd (filter ((<= 100000) . snd) directorySizes))
+  let diskSpace = 70000000
+  let spaceNeeded = 30000000
+  let spaceUsed = snd (head directorySizes)
+  let spaceToFree = spaceNeeded - (diskSpace - spaceUsed)
+  print $ (snd . head) (dropWhile ((< spaceToFree) . snd) (sortOn snd directorySizes))
