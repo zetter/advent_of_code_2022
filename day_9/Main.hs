@@ -10,25 +10,20 @@ parseMove command = take count (repeat move)
       'U' -> (0, 1)
       'D' -> (0, -1)
 
-getHeadPositions :: (Int, Int) -> [(Int, Int)] -> [(Int, Int)]
-getHeadPositions (x, y) [] = []
-getHeadPositions (x, y) ((mX, mY) : ms) = newLocation : getHeadPositions newLocation ms
-  where
-    newLocation = (x + mX, y + mY)
+nextHead :: (Int, Int) -> (Int, Int) -> (Int, Int)
+nextHead (x, y) (mX, mY) = (x + mX, y + mY)
 
-getTailPositions :: (Int, Int) -> [(Int, Int)] -> [(Int, Int)]
-getTailPositions (x, y) [] = []
-getTailPositions (x, y) ((hX, hY) : hs) = newTail : getTailPositions newTail hs
+nextTail :: (Int, Int) -> (Int, Int) -> (Int, Int)
+nextTail (x, y) (hX, hY) = (x + mX, y + mY)
   where
-    newTail = (newX, newY)
     moved = abs (hX - x) > 1 || abs (hY - y) > 1
-    newX = if moved then (x + signum (hX - x)) else x
-    newY = if moved then (y + signum (hY - y)) else y
+    mX = if moved then signum (hX - x) else 0
+    mY = if moved then signum (hY - y) else 0
 
 main :: IO ()
 main = do
   contents <- readFile "data.txt"
   let moves = concat $ map parseMove $ lines contents
-  let headPositions = getHeadPositions (0, 0) moves
-  let tailPositions = getTailPositions (0, 0) headPositions
+  let headPositions = scanl nextHead (0, 0) moves
+  let tailPositions = scanl nextTail (0, 0) headPositions
   print $ length $ nub tailPositions
