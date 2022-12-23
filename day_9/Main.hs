@@ -1,7 +1,7 @@
 import Data.List
 
 parseMove :: String -> [(Int, Int)]
-parseMove command = take count (repeat move)
+parseMove command = replicate count move
   where
     count = read (tail command) :: Int
     move = case head command of
