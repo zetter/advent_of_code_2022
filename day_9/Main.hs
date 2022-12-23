@@ -23,7 +23,7 @@ nextTail (x, y) (hX, hY) = (x + mX, y + mY)
 main :: IO ()
 main = do
   contents <- readFile "data.txt"
-  let moves = concat $ map parseMove $ lines contents
+  let moves = concatMap parseMove (lines contents)
   let headPositions = scanl nextHead (0, 0) moves
   let firstPositions = scanl nextTail (0, 0) headPositions
   let ninthPositions = last $ take 10 $ iterate (scanl nextTail (0, 0)) headPositions
