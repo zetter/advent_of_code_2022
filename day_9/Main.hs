@@ -25,7 +25,6 @@ main = do
   contents <- readFile "data.txt"
   let moves = concatMap parseMove (lines contents)
   let headPositions = scanl nextHead (0, 0) moves
-  let firstPositions = scanl nextTail (0, 0) headPositions
-  let ninthPositions = last $ take 10 $ iterate (scanl nextTail (0, 0)) headPositions
-  print $ length $ nub firstPositions
-  print $ length $ nub ninthPositions
+  let nthPositions = iterate (scanl nextTail (0, 0)) headPositions
+  print $ length . nub $ nthPositions !! 1
+  print $ length . nub $ nthPositions !! 9
